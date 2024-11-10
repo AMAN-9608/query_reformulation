@@ -32,7 +32,7 @@ async def startup_event():
     model = torch.quantization.quantize_dynamic(
         model, {torch.nn.Linear}, dtype=torch.qint8
     )
-
+   
     # model.half() # Uncomment if using pytorch model to convert to fp16
     model.eval()
 
@@ -48,7 +48,7 @@ async def startup_event():
     ).input_ids.to(device)
 
     with torch.inference_mode(): 
-        model.generate(prompt_tokens)
+        model.generate(prompt_tokens, max_new_tokens=30)
     
     startup_complete = True
     print("The API Server is live!")
@@ -65,20 +65,21 @@ async def health_check():
 @app.post("/reformulate_query", response_model=list[str])
 async def reformulate_query(input_text: InputText):
     input_ids = torch.cat(
-    [prompt_tokens, tokenizer(input_text.query, return_tensors="pt", padding=True, truncation=True).input_ids.to(device)],
-    dim=-1)
+    [prompt_tokens, tokenizer(input_text.query, return_tensors="pt", padding=True,
+                               truncation=True).input_ids.to(device)], dim=-1)
 
     with torch.inference_mode():
         outputs = model.generate(
             input_ids,
             num_return_sequences=5,
-            top_k=50,
+            top_k=25,
             top_p=0.95,
-            temperature=1,
+            temperature=0.5,
             num_beams=5,
             early_stopping=True,
             return_dict_in_generate=True,
             output_scores=True,
+            max_new_tokens=30
         )
 
         threshold = -2
