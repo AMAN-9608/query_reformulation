@@ -7,3 +7,4 @@ streamlit==1.39.0
 torch==2.5.1
 tqdm==4.66.6
 transformers==4.46.2
+sentencepiece=0.2.0
