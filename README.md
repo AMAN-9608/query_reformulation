@@ -9,6 +9,7 @@ The **fastapi_server.py** and **streamlit_frontend.py** files are components of 
 - **fastapi_server.py**: Hosts the ML model inference endpoint that is called by the streamlit frontend.
 - **streamlit_frontend.py**: The streamlit frontend that interacts with the user, collects input query, makes a call to the API and returns reformulated query/queries.
 - **streamlit_app.py**: Streamlit app that is used for hosting on streamlit cloud. Does not contain any api calls.
+- **train.py**: python file that contains code for training the ML model.
 
 ## Local Installation
 To run the app locally, execute the following commands:
